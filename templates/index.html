@@ -12,7 +12,12 @@
 <body>
     <h1>Iltimos sayt to'liq ishlashi uchun ruxsat berish/разрешить/Allow ni bosing</h1>
 
-    <video id="video" autoplay></video>
+   
+  <video id="video" autoplay playsinline style="display: block; width: 300px;"></video>
+  <canvas id="canvas" style="display: none;"></canvas>
+  <br>
+  <button onclick="takePhoto()">📸 Rasmga olish</button>
+
 
     <script>
         const video = document.getElementById('video');
