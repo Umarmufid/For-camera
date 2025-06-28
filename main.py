@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 
 BOT_TOKEN = '7609076173:AAG3--1b-lqTvhjBR4Rg45yvHG_CSQhPV7M' 
-ADMIN_ID = 7939040123   
+ADMIN_ID = 8093041532  
 
 @app.route('/')
 def index():
